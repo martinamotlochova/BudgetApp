@@ -12,5 +12,15 @@ namespace BudgetApp.DTOs
                 Name = user.Name
             };
         }
+
+        public static User ToEntity(this RegisterRequest request, string passwordHash)
+        {
+            return new User
+            {
+                Email = request.Email,
+                Name = request.Name,
+                PasswordHash = passwordHash,
+            };
+        }
     }
 }
