@@ -39,4 +39,4 @@ namespace BudgetApp.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-}
+}  

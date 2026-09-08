@@ -2,8 +2,10 @@
 using BudgetApp.DTOs;
 using BudgetApp.Models;
 using BudgetApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 
@@ -53,7 +55,23 @@ namespace BudgetApp.Controllers
 
             string token = _jwtService.GenerateToken(user);
 
-            return Ok(new { token, user = user.ToDto() });
+            return Ok(new LoginResponse { Token = token, User = user.ToDto() });
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            string? userIdText = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = int.Parse(userIdText!);
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.ToDto());
         }
 
     }
