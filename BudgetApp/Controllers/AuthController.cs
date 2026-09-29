@@ -67,9 +67,9 @@ namespace BudgetApp.Controllers
                 return BadRequest("Wrong email or password.");
             }
 
-            string token = _jwtService.GenerateToken(user);
+            var result = _jwtService.GenerateToken(user);
 
-            return Ok(new LoginResponse { Token = token, User = user.ToDto() });
+            return Ok(new LoginResponse { Token = result.Token, User = user.ToDto() });
         }
 
         [Authorize]

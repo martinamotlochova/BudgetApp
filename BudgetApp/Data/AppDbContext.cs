@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BudgetApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Data
 {
@@ -7,6 +8,16 @@ namespace BudgetApp.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-        public DbSet<Models.User> Users { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasIndex(t => t.TokenHash)
+                .IsUnique();
+        }
     }
 }
