@@ -15,7 +15,7 @@ namespace BudgetApp.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public (string Token, DateTime ExpiresAt) GenerateToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -26,17 +26,18 @@ namespace BudgetApp.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiresMinutes = double.Parse(_configuration["Jwt:ExpiresInMinutes"]!);
+            var expiresMinutes = double.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"]!);
+            var expiresAt = DateTime.UtcNow.AddMinutes(expiresMinutes);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
+                expires: expiresAt,
                 signingCredentials: credentials
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return (new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
         }
     }
 }  

@@ -17,16 +17,24 @@ namespace BudgetApp.Controllers
     {
         private readonly AppDbContext _context;
         private readonly JwtService _jwtService;
+        private readonly AuthValidationService _validationService = new AuthValidationService();
 
-        public AuthController(AppDbContext context, JwtService jwtService)
+        public AuthController(AppDbContext context, JwtService jwtService, AuthValidationService validationService)
         {
             _context = context;
             _jwtService = jwtService;
+            _validationService = validationService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
+            var validationError = _validationService.ValidateRegisterRequest(request);
+            if (validationError != null)
+            {
+                return BadRequest(validationError);
+            }
+
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
             {
                 return BadRequest("Email is already in use.");
@@ -41,6 +49,12 @@ namespace BudgetApp.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
+            var validationError = _validationService.ValidateLoginRequest(request);
+            if (validationError != null)
+            {
+                return BadRequest(validationError);
+            }
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
             {
