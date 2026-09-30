@@ -17,11 +17,14 @@ namespace BudgetApp.Controllers
     {
         private readonly AppDbContext _context;
         private readonly JwtService _jwtService;
+        private readonly RefreshTokenService _refreshTokenService;
         private readonly AuthValidationService _validationService = new AuthValidationService();
 
-        public AuthController(AppDbContext context, JwtService jwtService, AuthValidationService validationService)
+        public AuthController(AppDbContext context, JwtService jwtService, RefreshTokenService refreshTokenService, AuthValidationService validationService)
         {
             _context = context;
+            _jwtService = jwtService;
+            _refreshTokenService = refreshTokenService;
             _jwtService = jwtService;
             _validationService = validationService;
         }
@@ -67,9 +70,16 @@ namespace BudgetApp.Controllers
                 return BadRequest("Wrong email or password.");
             }
 
-            var result = _jwtService.GenerateToken(user);
+            var access = _jwtService.GenerateToken(user);
+            var refreshtoken = await _refreshTokenService.CreateRefreshTokenAsync(user);
 
-            return Ok(new LoginResponse { Token = result.Token, User = user.ToDto() });
+            return Ok(new LoginResponse
+            {
+                AccessToken = access.Token,
+                AccessTokenExpiresAt = access.ExpiresAt,
+                RefreshToken = refreshtoken,
+                User = user.ToDto()
+            });
         }
 
         [Authorize]
