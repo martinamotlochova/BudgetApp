@@ -5,6 +5,8 @@ using System.Text;
 using BudgetApp.Models;
 using System.Security.Cryptography;
 using BudgetApp.Data;
+using BudgetApp.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Services
 {
@@ -38,6 +40,36 @@ namespace BudgetApp.Services
 
             return rawToken;
         }
+
+        public async Task<(User user, string RefreshToken)?> RotateRefreshTokenAsync(string rawToken)
+        {
+            var hash = HashToken(rawToken);
+
+            var stored = await _context.RefreshTokens.Include(t => t.User).FirstOrDefaultAsync(t => t.TokenHash == hash);
+
+            if (stored == null) return null;
+
+            if (stored.RevokedAt != null)
+            {
+                var active = await _context.RefreshTokens.Where(t => t.UserId == stored.UserId && stored.RevokedAt == null).ToListAsync();
+
+                foreach (var token in active)
+                {
+                    token.RevokedAt = DateTime.UtcNow;
+                }
+
+                await _context.SaveChangesAsync();
+                return null;
+            }
+
+            if (stored.ExpiresAt < DateTime.UtcNow) return null;
+
+            stored.RevokedAt = DateTime.UtcNow;
+            var newRawToken = await CreateRefreshTokenAsync(stored.User);
+
+            return (stored.User, newRawToken);
+        }
+
 
         public string GenerateRefreshToken()
         {

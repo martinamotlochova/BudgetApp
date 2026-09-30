@@ -98,5 +98,24 @@ namespace BudgetApp.Controllers
             return Ok(user.ToDto());
         }
 
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh (RefreshRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.RefreshToken)) return BadRequest("Refresh token is required.");
+
+            var result = await _refreshTokenService.RotateRefreshTokenAsync(request.RefreshToken);
+            if (result == null) return Unauthorized();
+
+            var access = _jwtService.GenerateToken(result.Value.user);
+
+            return Ok(new LoginResponse
+            {
+                AccessToken = access.Token,
+                AccessTokenExpiresAt = access.ExpiresAt,
+                RefreshToken = result.Value.RefreshToken,
+                User = result.Value.user.ToDto()
+            });
+        }
+
     }
 }
