@@ -70,6 +70,19 @@ namespace BudgetApp.Services
             return (stored.User, newRawToken);
         }
 
+        public async Task RevokeRefreshTokenAsync(string rawToken)
+        {
+            var hash = HashToken(rawToken);
+
+            var stored = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.TokenHash == hash);
+
+            if (stored == null || stored.RevokedAt != null) return;
+
+            stored.RevokedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+        }
+
 
         public string GenerateRefreshToken()
         {

@@ -117,5 +117,15 @@ namespace BudgetApp.Controllers
             });
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(LogoutRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.RefreshToken)) return BadRequest("Refresh token is required");
+
+            await _refreshTokenService.RevokeRefreshTokenAsync(request.RefreshToken);
+
+            return NoContent();
+        }
+
     }
 }

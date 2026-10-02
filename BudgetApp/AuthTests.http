@@ -1,0 +1,16 @@
+### 1) Login
+POST http://localhost:5113/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "AAAA@gmail.com",
+  "password": "AAAA12345+"
+}
+
+### 2) Refresh (paste the refreshToken from the login response)
+POST http://localhost:5113/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "ansjkfnaesklnaokgfikoj"
+}
