@@ -2,7 +2,7 @@
 
 Backendová časť osobnej finančnej aplikácie **BudgetApp**, vytvorená v C# a ASP.NET Core. Projekt poskytuje REST API pre Android klienta a zabezpečuje prácu s používateľmi, autentifikáciou a finančnými údajmi.
 
-> Projekt je vytváraný ako praktický osobný projekt s cieľom prehĺbiť znalosti vývoja backendových aplikácií v C#/.NET, práce s databázami a tvorby REST API.
+> Praktický osobný projekt zameraný na rozvoj znalostí v oblasti C#/.NET, backendového vývoja, databáz a REST API.
 
 ## 🛠️ Technológie
 
@@ -18,68 +18,50 @@ Backendová časť osobnej finančnej aplikácie **BudgetApp**, vytvorená v C# 
 
 ## 📌 Funkcionalita
 
-Backend aktuálne zahŕňa najmä:
+Backend aktuálne zahŕňa:
 
-- registráciu používateľov
-- prihlasovanie používateľov
+- registráciu a prihlasovanie používateľov
 - JWT autentifikáciu
 - prácu s používateľskými účtami
-- komunikáciu s databázou pomocou Entity Framework Core
+- komunikáciu s PostgreSQL databázou pomocou Entity Framework Core
 - oddelenie databázových entít a DTO modelov
 - validáciu vstupných údajov
 - databázové migrácie
-- REST API pre komunikáciu s klientskou aplikáciou
+- REST API pre komunikáciu s Android aplikáciou
 
 ## 🏗️ Architektúra
 
-Projekt je postavený ako **ASP.NET Core Web API** s oddelením jednotlivých častí aplikácie.
+Projekt je postavený ako **ASP.NET Core Web API**.
 
 Pri návrhu sa zameriavam najmä na:
 
 - oddelenie API vrstvy od dátového modelu
 - používanie DTO namiesto priameho vystavovania databázových entít
 - prácu s databázou prostredníctvom Entity Framework Core
-- bezpečnú autentifikáciu používateľov pomocou JWT
-- validáciu vstupov a konzistentnú prácu s dátami
+- JWT autentifikáciu používateľov
+- validáciu vstupných údajov
+- konzistentnú prácu s dátami
 
-## 📱 Klientská aplikácia
+## 📱 Android klient
 
-Backend je určený pre Android klienta vytvoreného v **Kotline a Jetpack Compose**.
+Backend je prepojený s Android aplikáciou vytvorenou v **Kotline a Jetpack Compose**.
 
-Frontend repozitár:
-
-**[BudgetApp – Android frontend](https://github.com/martinamotlochova/BudgetApp-frontend)**
+**Frontend:**  
+https://github.com/martinamotlochova/BudgetApp-frontend
 
 Android aplikácia komunikuje s backendom prostredníctvom REST API.
 
-## 🚀 Spustenie projektu
+## 🎯 Cieľ projektu
 
-### Požiadavky
+BudgetApp je praktický projekt, na ktorom si prehlbujem znalosti **C#/.NET a backendového vývoja**.
 
-Pre spustenie projektu je potrebné mať nainštalované:
+Pri jeho vývoji sa venujem najmä:
 
-- .NET 10 SDK
-- PostgreSQL
-- Visual Studio alebo JetBrains Rider
+- tvorbe REST API
+- práci s relačnou databázou
+- Entity Framework Core
+- autentifikácii používateľov
+- návrhu a oddeleniu dátových modelov
+- komunikácii medzi backendom a klientskou aplikáciou
 
-### Konfigurácia
-
-Pred spustením je potrebné nastaviť pripojenie k PostgreSQL databáze a ďalšie konfiguračné hodnoty podľa lokálneho prostredia.
-
-Citlivé údaje, ako napríklad heslá alebo connection stringy, nie sú súčasťou repozitára.
-
-### Spustenie
-
-Po nastavení databázy je možné projekt spustiť priamo cez Visual Studio alebo pomocou .NET CLI.
-
-```bash
-dotnet restore
-dotnet build
-dotnet run
-```
-
-## 📚 Cieľ projektu
-
-BudgetApp vzniká ako praktický projekt počas môjho učenia sa C#/.NET. Pri jeho vývoji si prehlbujem znalosti backendového vývoja, databáz, REST API, autentifikácie a komunikácie medzi backendom a klientskou aplikáciou.
-
-Projekt je priebežne rozvíjaný a jeho funkcionalita sa postupne rozširuje.
+Projekt je priebežne vyvíjaný a jeho funkcionalita sa postupne rozširuje.
